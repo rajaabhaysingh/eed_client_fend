@@ -10,6 +10,15 @@
 .fsm {
   font-size: 1rem;
 }
+.fsl {
+  font-size: 1.2rem;
+}
+.fsxl {
+  font-size: 1.5rem;
+}
+.fs2x {
+  font-size: 2rem;
+}
 
 /* font styles */
 .fwb {
@@ -22,6 +31,9 @@
 }
 .h-36p {
   height: 36px;
+}
+.h-16 {
+  height: 16px;
 }
 
 /* padding */
@@ -60,6 +72,10 @@
   align-items: center;
   justify-content: space-between;
 }
+.f1 {
+  display: flex;
+  flex: 1;
+}
 
 /* border radius */
 .br-4-4-0-0 {
@@ -71,30 +87,7 @@
   color: #ffffff;
 }
 
-/* login */
-.login-box {
-  margin: auto;
-  padding-bottom: 16px;
-  box-sizing: border-box;
-  border-radius: 32px;
-  border: 1px solid #100e96;
-  border-top: 8px solid #100e96;
-  box-shadow: 0 2px 8px #8a8a8a;
-}
-.headerBox {
-  min-width: 220px;
-  width: 220px;
-  min-height: 36px;
-  padding: 8px 16px;
-  border-radius: 8px 8px 0 0;
-  white-space: nowrap;
-}
-.borB-2 {
-  height: 2px;
-  width: 100%;
-}
-
-/* mui */
-.MuiDivider-root {
-  background-color: #969696 !important;
+/* custom */
+.zoom:hover {
+  transform: scale(1.02);
 }
