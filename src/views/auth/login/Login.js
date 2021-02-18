@@ -31,6 +31,9 @@ import styles from "assets/jss/material-kit-react/views/loginPage.js";
 
 // assets
 import image from "assets/img/bg7.jpg";
+import getUrlParams from "helpers/getQueryParams";
+import { Link } from "react-router-dom";
+import { clearSignup, signup } from "redux/actions";
 
 const useStyles = makeStyles(styles);
 
@@ -51,6 +54,7 @@ export default function LoginPage(props) {
   const { ...rest } = props;
 
   const auth = useSelector((state) => state.auth);
+  const signup = useSelector((state) => state.signup);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -93,8 +97,20 @@ export default function LoginPage(props) {
   };
 
   // if user is logged in, he/she will be redirected to dashboard even if he/she tries to login again
+  const urlParams = getUrlParams(window.location.search);
+
+  // reset signup state after successful registration
+  // since user is redirected to this component after registration
+  if (signup.registered) {
+    dispatch(clearSignup());
+  }
+
   if (auth.authenticated) {
-    return <Redirect to="/" />;
+    if (urlParams?.target) {
+      return <Redirect to={urlParams.target} />;
+    } else {
+      return <Redirect to="/" />;
+    }
   }
 
   return (
@@ -120,7 +136,7 @@ export default function LoginPage(props) {
               <Card className={classes[cardAnimaton]}>
                 <form className={classes.form} onSubmit={handleLoginFormSubmit}>
                   <CardHeader color="primary" className={classes.cardHeader}>
-                    <h4>Login</h4>
+                    <h3>Login</h3>
                     <div className={classes.socialLine}>
                       <Button
                         justIcon
@@ -151,7 +167,19 @@ export default function LoginPage(props) {
                       </Button>
                     </div>
                   </CardHeader>
-                  <p className={classes.divider}>Or enter Email and Password</p>
+                  <p className={classes.divider}>
+                    New user ?{" "}
+                    <Link
+                      color="primary"
+                      to={
+                        urlParams.target
+                          ? `/signup?target=${urlParams.target}`
+                          : "/signup"
+                      }
+                    >
+                      <strong>SIGNUP NOW</strong>
+                    </Link>
+                  </p>
                   <CardBody>
                     <CustomInput
                       labelText="Email..."
@@ -195,7 +223,7 @@ export default function LoginPage(props) {
                   </CardBody>
                   <div className="w-100 fcc mar_b-32">
                     <ReCAPTCHA
-                      sitekey="6LcK8jQaAAAAADOyreNBp9-8suxxvJvRco3m7X6r"
+                      sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
                       onChange={captchaPassed}
                       onExpired={captchaFailed}
                       onErrored={captchaFailed}

@@ -10,14 +10,18 @@ const useStyles = makeStyles(styles);
 
 export default function Success(props) {
   const classes = useStyles();
-  const { children } = props;
+  const { children, className } = props;
   return (
-    <div className={classes.defaultFontStyle + " " + classes.successText}>
+    <div
+      className={
+        classes.defaultFontStyle + " " + classes.successText + " " + className
+      }
+    >
       {children}
     </div>
   );
 }
 
 Success.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };

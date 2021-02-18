@@ -9,6 +9,10 @@ const initialState = {
   getAllCourseLoading: false,
   getAllCourseSuccessful: false,
   getAllCourseError: null,
+  getCourseBySlugData: null,
+  getCourseBySlugLoading: false,
+  getCourseBySlugSuccessful: false,
+  getCourseBySlugError: null,
 };
 
 export default (state = initialState, action) => {
@@ -66,6 +70,34 @@ export default (state = initialState, action) => {
         getAllCourseLoading: false,
         getAllCourseSuccessful: false,
         getAllCourseError: action.payload.error,
+      };
+      break;
+
+    case courseConstants.GET_COURSE_BY_SLUG_REQUEST:
+      state = {
+        ...state,
+        getCourseBySlugLoading: true,
+        getCourseBySlugError: null,
+      };
+      break;
+
+    case courseConstants.GET_COURSE_BY_SLUG_SUCCESS:
+      state = {
+        ...state,
+        getCourseBySlugData: action.payload.data,
+        getCourseBySlugLoading: false,
+        getCourseBySlugSuccessful: true,
+        getCourseBySlugError: null,
+      };
+      break;
+
+    case courseConstants.GET_COURSE_BY_SLUG_FAILURE:
+      state = {
+        ...state,
+        getCourseBySlugData: null,
+        getCourseBySlugLoading: false,
+        getCourseBySlugSuccessful: false,
+        getCourseBySlugError: action.payload.error,
       };
       break;
 

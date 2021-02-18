@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 // material-ui components
 import { makeStyles } from "@material-ui/core/styles";
 import { Divider, Tooltip } from "@material-ui/core";
@@ -18,6 +19,10 @@ import { cardTitle, secondaryColor } from "assets/jss/material-kit-react.js";
 
 const styles = {
   ...imagesStyles,
+  link: {
+    color: "inherit",
+    textDecoration: "none",
+  },
   cardTitle: {
     ...cardTitle,
     whiteSpace: "nowrap",
@@ -78,35 +83,43 @@ const useStyles = makeStyles(styles);
 
 export default function Cards({ course }) {
   const classes = useStyles();
+
   return (
-    <Card className={classes.root}>
-      <div className={classes.imageContainer}>
-        <img
-          className={classes.courseThumbnail}
-          src={
-            course.thumbnail
-              ? process.env.REACT_APP_MEDIA_URL_BASE + course.thumbnail
-              : productPlaceholder
-          }
-          alt="Card-img-cap"
-        />
-      </div>
-      <CardBody>
-        <Tooltip arrow title={course.name}>
-          <h3 className={classes.cardTitle}>{course.name}</h3>
-        </Tooltip>
-        <p className={classes.desc}>{course.desc}</p>
-      </CardBody>
-      <Divider className={classes.divider} />
-      <CardFooter className="fcbw">
-        <Badge className="fc fss" color="primary">
-          {netRating(course.ratings)} <i className="fas fa-star"></i>
-        </Badge>
-        <div className="fc fss fwb">
-          {course.price ? `₹${course.price}` : "Free"}
+    <Link
+      className={classes.link}
+      to={`/courses/${course.category.slug}/${course.slug}`}
+      target="_blank"
+      aria-labelledby={course.name}
+    >
+      <Card className={classes.root}>
+        <div className={classes.imageContainer}>
+          <img
+            className={classes.courseThumbnail}
+            src={
+              course.thumbnail
+                ? process.env.REACT_APP_MEDIA_URL_BASE + course.thumbnail
+                : productPlaceholder
+            }
+            alt="Card-img-cap"
+          />
         </div>
-      </CardFooter>
-      <div className={classes.category}>{course.level}</div>
-    </Card>
+        <CardBody>
+          <Tooltip arrow title={course.name}>
+            <h3 className={classes.cardTitle}>{course.name}</h3>
+          </Tooltip>
+          <p className={classes.desc}>{course.desc}</p>
+        </CardBody>
+        <Divider className={classes.divider} />
+        <CardFooter className="fcbw">
+          <Badge className="fc fss" color="primary">
+            {netRating(course.ratings)} <i className="fas fa-star"></i>
+          </Badge>
+          <div className="fc fss fwb">
+            {course.price ? `₹${course.price}` : "Free"}
+          </div>
+        </CardFooter>
+        <div className={classes.category}>{course.level}</div>
+      </Card>
+    </Link>
   );
 }

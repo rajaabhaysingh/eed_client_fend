@@ -1,4 +1,4 @@
-import { title, secondaryLight } from "assets/jss/material-kit-react.js";
+import { title, secondaryColor } from "assets/jss/material-kit-react.js";
 
 const infographics = (theme) => ({
   section: {
@@ -9,7 +9,7 @@ const infographics = (theme) => ({
       padding: "70px 24px",
     },
     textAlign: "center",
-    backgroundColor: secondaryLight,
+    backgroundColor: secondaryColor,
   },
   title: {
     ...title,

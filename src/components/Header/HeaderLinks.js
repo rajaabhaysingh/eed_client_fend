@@ -10,8 +10,8 @@ import {
   ListItem,
   List,
   Box,
-  LinearProgress,
   CircularProgress,
+  Typography,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 
@@ -24,12 +24,13 @@ import Button from "components/CustomButtons/Button.js";
 import Badge from "components/Badge/Badge";
 
 // assets
-import catPlaceholder from "assets/img/faces/camp.jpg";
+import catPlaceholder from "assets/img/notAvailable.svg";
+import userPlaceholder from "assets/img/userPlaceholder.svg";
 
 import styles from "assets/jss/material-kit-react/components/customHeaderLinksStyle.js";
 
 // redux stuff
-import { getAllCategory } from "redux/actions";
+import { getAllCategory, logout } from "redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 
 const useStyles = makeStyles(styles);
@@ -47,6 +48,11 @@ export default function HeaderLinks() {
   useEffect(() => {
     dispatch(getAllCategory());
   }, []);
+
+  // handleUserLogout
+  const handleUserLogout = () => {
+    dispatch(logout());
+  };
 
   // renderNestedCategory
   const renderNestedCategory = (categories) => {
@@ -102,32 +108,56 @@ export default function HeaderLinks() {
       return (
         <CustomDropdown
           hoverColor="primary"
-          left
+          // left
           dropdownHeader={
-            auth.user?.firstName
-              ? `Hello, ${auth.user.firstName}`
+            auth.user?.firstName && auth.user?.lastName
+              ? `Hello, ${auth.user.firstName} ${auth.user.lastName}`
               : `Hello user`
           }
           buttonText={
-            <img
-              src={
-                auth.user?.profilePicture
-                  ? process.env.REACT_APP_MEDIA_URL_BASE +
-                    auth.user.profilePicture
-                  : catPlaceholder
-              }
-              className={classes.img}
-              alt="profile"
-            />
+            <>
+              {" "}
+              <img
+                src={
+                  auth.user?.profilePicture
+                    ? process.env.REACT_APP_MEDIA_URL_BASE +
+                      auth.user.profilePicture
+                    : userPlaceholder
+                }
+                className={classes.img}
+                alt=""
+              />
+              <Typography className={classes.accText}>ACCOUNT</Typography>
+            </>
           }
           buttonProps={{
             className: classes.imageDropdownButton,
             color: "transparent",
           }}
           dropdownList={[
-            <div>Account</div>,
+            <div
+              onClick={() => {
+                history.push("/account");
+              }}
+            >
+              Account
+            </div>,
+            <div
+              onClick={() => {
+                history.push("/account/courses");
+              }}
+            >
+              My courses
+            </div>,
+            <div
+              onClick={() => {
+                history.push("/account/cart");
+              }}
+            >
+              Cart
+            </div>,
             <div>Settings</div>,
-            <div>Logout</div>,
+            <div onClick={handleUserLogout}>Logout</div>,
           ]}
         />
       );

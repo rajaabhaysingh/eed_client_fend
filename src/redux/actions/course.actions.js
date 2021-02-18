@@ -80,3 +80,43 @@ export const getAllCourse = () => {
       });
   };
 };
+
+// getCourseBySlug
+export const getCourseBySlug = (courseSlug) => {
+  return async (dispatch) => {
+    dispatch({
+      type: courseConstants.GET_COURSE_BY_SLUG_REQUEST,
+    });
+
+    await axiosIntance
+      .get(`/api/course/get-course-by-course-slug/${courseSlug}`)
+      .then((res) => {
+        if (res.status === 200) {
+          const { data } = res.data;
+
+          dispatch({
+            type: courseConstants.GET_COURSE_BY_SLUG_SUCCESS,
+            payload: { data: data },
+          });
+        } else {
+          dispatch({
+            type: courseConstants.GET_COURSE_BY_SLUG_FAILURE,
+            payload: { error: res.data.error },
+          });
+        }
+      })
+      .catch((err) => {
+        dispatch({
+          type: courseConstants.GET_COURSE_BY_SLUG_FAILURE,
+          payload: {
+            error:
+              typeof err.response?.data?.error !== "object"
+                ? err.response?.data?.error
+                : err.response?.data?.error?.message ||
+                  err.message ||
+                  "Some unexpected error occured. Try refreshing the page or contact developer if problem persists.",
+          },
+        });
+      });
+  };
+};

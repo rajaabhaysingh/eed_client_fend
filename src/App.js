@@ -7,13 +7,18 @@ import { isUserLoggedIn } from ".//redux/actions/auth.actions";
 
 import Home from "views/homepage/Home";
 import Login from "views/auth/login/Login";
+import Signup from "views/auth/signup/Signup";
 import Error404 from "views/error/Error404";
 import Courses from "views/courses/Courses";
+import Account from "views/account/Account";
 
 // importing styles
 import "./styles/styles.css";
 import "./styles/margins.css";
 import "./styles/draftjs.css";
+
+// private route HOC
+import PrivateRoute from "components/HOC/PrivateRoute";
 
 function App() {
   // managing global auth state
@@ -29,18 +34,16 @@ function App() {
   return (
     <div className="App">
       <Switch>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <Route path="/login">
-          <Login />
-        </Route>
-        <Route path="/courses">
-          <Courses />
-        </Route>
-        <Route path="/error">
-          <Error404 />
-        </Route>
+        <Route exact path="/" component={Home} />
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/courses" component={Courses} />
+        <PrivateRoute
+          path="/account"
+          targetUrl="/account"
+          component={Account}
+        />
+        <Route path="/error" component={Error404} />
         <Redirect to="/error" />
       </Switch>
     </div>

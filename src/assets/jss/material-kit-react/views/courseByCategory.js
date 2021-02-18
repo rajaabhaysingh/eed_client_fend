@@ -1,6 +1,6 @@
 import { container, title } from "assets/jss/material-kit-react.js";
 
-const landingPageStyle = (theme) => ({
+const courseByCategory = (theme) => ({
   container: {
     ...container,
     zIndex: "12",
@@ -12,6 +12,8 @@ const landingPageStyle = (theme) => ({
     margin: "16px",
     minHeight: "32px",
     textDecoration: "none",
+    padding: "16px",
+    fontSize: "1.5rem",
   },
   subtitle: {
     fontSize: "1.313rem",
@@ -24,9 +26,9 @@ const landingPageStyle = (theme) => ({
     zIndex: "3",
   },
   mainRaised: {
-    margin: "100px 30px 0px",
+    margin: "108px 30px 0px",
     [theme.breakpoints.down("sm")]: {
-      margin: "84px 10px 0px",
+      margin: "80px 10px 0px",
     },
     borderRadius: "6px",
     boxShadow:
@@ -46,4 +48,4 @@ const landingPageStyle = (theme) => ({
   },
 });
 
-export default landingPageStyle;
+export default courseByCategory;

@@ -16,6 +16,8 @@ import CustomLinearProgress from "components/CustomLinearProgress/CustomLinearPr
 
 // sections
 import CoursesTab from "./sections/CoursesTab";
+import Infographics from "./sections/InfographicsAlt";
+import SalientFeatures from "./sections/SalientFeatures";
 
 // redux
 import { getCoursesByCategorySlug } from "redux/actions/course.actions";
@@ -23,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 // routes
 import CoursePageLanding from "./CoursePageLanding";
+import ProductsSuggestion from "./sections/ProductsSuggestion";
 
 const useStyles = makeStyles(styles);
 
@@ -56,8 +59,10 @@ const CourseByCategory = (props) => {
         if (course.getCoursesByCategorySlugData) {
           return (
             <>
+              <SalientFeatures />
               <CoursesTab data={course.getCoursesByCategorySlugData} />
-              {/* <CoursesByCategoryTab  /> */}
+              <Infographics />
+              <ProductsSuggestion course={course} />
             </>
           );
         } else {
@@ -104,12 +109,19 @@ const CourseByCategory = (props) => {
               classes.body
             )}
           >
+            <div className={classes.title}>
+              Courses
+              <i className="fas fa-chevron-right mar_l-8 mar_r-8"></i>
+              {course.getCoursesByCategorySlugData?.name
+                ? course.getCoursesByCategorySlugData.name
+                : "Unknown"}
+            </div>
             {renderCoursesByCategory()}
           </div>
           <Footer />
         </div>
       </Route>
-      <Route path={`${path}/:courseId`}>
+      <Route path={`${path}/:courseSlug`}>
         <CoursePageLanding />
       </Route>
     </Switch>

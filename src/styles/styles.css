@@ -8,6 +8,9 @@
   font-size: 0.8rem;
 }
 .fsm {
+  font-size: 0.9rem;
+}
+.fsn {
   font-size: 1rem;
 }
 .fsl {
@@ -23,6 +26,14 @@
 /* font styles */
 .fwb {
   font-weight: bold;
+}
+
+/* font color */
+.fcg {
+  color: #666;
+}
+.fcgd {
+  color: #444;
 }
 
 /* sizing */
@@ -58,9 +69,18 @@
   display: flex;
   align-items: center;
 }
+.fccol {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
 .fcc {
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+.f_cent {
+  display: flex;
   justify-content: center;
 }
 .f_spbw {
@@ -72,14 +92,42 @@
   align-items: center;
   justify-content: space-between;
 }
+.fcend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
 .f1 {
   display: flex;
   flex: 1;
 }
 
+/* position */
+.rel {
+  position: relative;
+}
+.abs_lt {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.abs_br {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.abs_br-8 {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+}
+
 /* border radius */
 .br-4-4-0-0 {
   border-radius: 4px 4px 0 0;
+}
+.round {
+  border-radius: 20px;
 }
 
 /* links */

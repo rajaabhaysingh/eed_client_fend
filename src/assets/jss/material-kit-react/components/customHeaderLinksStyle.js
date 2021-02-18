@@ -120,6 +120,7 @@ const headerLinksStyle = (theme) => ({
     [theme.breakpoints.down("sm")]: {
       marginLeft: "24px",
     },
+    marginBottom: "7px",
   },
   imageDropdownButton: {
     padding: "0px",
@@ -149,6 +150,8 @@ const headerLinksStyle = (theme) => ({
   },
   mainList: {
     fontWeight: "bold",
+    maxHeight: "520px",
+    overflow: "scroll",
   },
   customListItem: {
     padding: "5px",
@@ -185,6 +188,13 @@ const headerLinksStyle = (theme) => ({
   },
   marginLeft: {
     marginLeft: "8px",
+  },
+  accText: {
+    fontSize: "0.75rem",
+    margin: "0 4px 4px 4px",
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
   },
 });
 

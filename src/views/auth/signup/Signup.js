@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Icon from "@material-ui/core/Icon";
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";
-import People from "@material-ui/icons/People";
+import Warning from "@material-ui/icons/Warning";
 // core components
 import Header from "components/Header/Header.js";
 import HeaderLinks from "components/Header/HeaderLinks.js";
@@ -18,20 +19,134 @@ import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardFooter from "components/Card/CardFooter.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
+import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 
-import styles from "assets/jss/material-kit-react/views/loginPage.js";
+// recaptcha
+import ReCAPTCHA from "react-google-recaptcha";
+// redux
+import { useDispatch, useSelector } from "react-redux";
+import { signup as signupAction } from "redux/actions/signup.actions";
 
+import styles from "assets/jss/material-kit-react/views/signupPage.js";
+
+// assets
 import image from "assets/img/bg7.jpg";
+import userPlaceholder from "assets/img/userPlaceholder.svg";
+import getUrlParams from "helpers/getQueryParams";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(styles);
 
-export default function SignupPage(props) {
-  const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
+export default function LoginPage(props) {
+  const [formState, setFormState] = useState({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    passwordConfirm: "",
+    profilePicture: undefined,
+    preview: userPlaceholder,
+    reCAPTCHA: false,
+  });
+  const [cardAnimaton, setCardAnimation] = useState("cardHidden");
+  const [disableSignup, setDisableSignup] = useState(true);
+  console.log(formState);
+
   setTimeout(function () {
     setCardAnimation("");
   }, 700);
+
   const classes = useStyles();
   const { ...rest } = props;
+
+  const signup = useSelector((state) => state.signup);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (signup.registered) {
+      signup.error = null;
+    }
+  }, [signup]);
+
+  // handleChange
+  const handleChange = (e, image = null) => {
+    if (image) {
+      setFormState({
+        ...formState,
+        [e.target.name]: e.target.files[0],
+        preview: URL.createObjectURL(e.target.files[0]),
+      });
+      return;
+    }
+
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // handleSignupFormSubmit
+  const handleSignupFormSubmit = (e) => {
+    e.preventDefault();
+
+    if (formState.password !== formState.passwordConfirm) {
+      alert("Password didn't match");
+      setFormState({
+        ...formState,
+        passwordConfirm: "",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("firstName", formState.firstName);
+
+    if (formState.middleName) {
+      formData.append("middleName", formState.middleName);
+    }
+
+    formData.append("lastName", formState.lastName);
+    formData.append("email", formState.email);
+    formData.append("password", formState.password);
+
+    if (formState.profilePicture) {
+      formData.append("profilePicture", formState.profilePicture);
+    }
+
+    dispatch(signupAction(formData));
+  };
+
+  // captchaFailed
+  const captchaFailed = () => {
+    setFormState({
+      ...formState,
+      reCAPTCHA: false,
+    });
+    setDisableSignup(true);
+  };
+
+  // captchaPassed
+  const captchaPassed = () => {
+    setFormState({
+      ...formState,
+      reCAPTCHA: true,
+    });
+    setDisableSignup(false);
+  };
+
+  // if user is logged in, he/she will be redirected to dashboard even if he/she tries to login again
+  const urlParams = getUrlParams(window.location.search);
+
+  if (signup.registered) {
+    if (urlParams?.target) {
+      return <Redirect to={`/login?target=${urlParams.target}`} />;
+    } else {
+      return <Redirect to="/login" />;
+    }
+  }
+
   return (
     <div>
       <Header
@@ -51,65 +166,111 @@ export default function SignupPage(props) {
       >
         <div className={classes.container}>
           <GridContainer justify="center">
-            <GridItem xs={12} sm={12} md={4}>
+            <GridItem xs={12} sm={12} md={5}>
               <Card className={classes[cardAnimaton]}>
-                <form className={classes.form}>
+                <form
+                  className={classes.form}
+                  onSubmit={handleSignupFormSubmit}
+                  encType="multipart/form-data"
+                >
                   <CardHeader color="primary" className={classes.cardHeader}>
-                    <h4>Login</h4>
-                    <div className={classes.socialLine}>
-                      <Button
-                        justIcon
-                        href="#pablo"
-                        target="_blank"
-                        color="transparent"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <i className={"fab fa-twitter"} />
-                      </Button>
-                      <Button
-                        justIcon
-                        href="#pablo"
-                        target="_blank"
-                        color="transparent"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <i className={"fab fa-facebook"} />
-                      </Button>
-                      <Button
-                        justIcon
-                        href="#pablo"
-                        target="_blank"
-                        color="transparent"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <i className={"fab fa-google-plus-g"} />
-                      </Button>
-                    </div>
+                    <h3>User registration</h3>
                   </CardHeader>
-                  <p className={classes.divider}>Or Be Classical</p>
+                  <p className={classes.divider}>
+                    Already have an account ?{" "}
+                    <Link
+                      color="primary"
+                      to={
+                        urlParams.target
+                          ? `/login?target=${urlParams.target}`
+                          : "/login"
+                      }
+                    >
+                      <strong>LOGIN HERE</strong>
+                    </Link>
+                  </p>
                   <CardBody>
+                    <div
+                      className={classes.imageContainer}
+                      xs={12}
+                      sm={12}
+                      md={12}
+                      lg={12}
+                      xl={12}
+                    >
+                      <img
+                        className={classes.catImgChange}
+                        src={formState.preview}
+                        alt=""
+                      />
+                      <input
+                        style={{
+                          display: "none",
+                        }}
+                        id="profilePicture"
+                        type="file"
+                        accept="image/*"
+                        name="profilePicture"
+                        onChange={(e) => handleChange(e, true)}
+                      />
+                      <label
+                        className={classes.inpLabel}
+                        htmlFor="profilePicture"
+                      >
+                        <i className="fas fa-upload mar-auto"></i>
+                      </label>
+                    </div>
+                    <div className="fc mar_t-16">
+                      <CustomInput
+                        labelText="First Name*"
+                        id="firstName"
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                        inputProps={{
+                          name: "firstName",
+                          value: formState.firstName,
+                          onChange: handleChange,
+                          type: "firstName",
+                        }}
+                      />
+                      <CustomInput
+                        labelText="Middle Name"
+                        id="middleName"
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                        inputProps={{
+                          name: "middleName",
+                          value: formState.middleName,
+                          onChange: handleChange,
+                          type: "middleName",
+                        }}
+                      />
+                      <CustomInput
+                        labelText="Last Name*"
+                        id="lastName"
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                        inputProps={{
+                          name: "lastName",
+                          value: formState.lastName,
+                          onChange: handleChange,
+                          type: "lastName",
+                        }}
+                      />
+                    </div>
                     <CustomInput
-                      labelText="First Name..."
-                      id="first"
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                      inputProps={{
-                        type: "text",
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <People className={classes.inputIconsColor} />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                    <CustomInput
-                      labelText="Email..."
+                      labelText="Email*"
                       id="email"
                       formControlProps={{
                         fullWidth: true,
                       }}
                       inputProps={{
+                        name: "email",
+                        value: formState.email,
+                        onChange: handleChange,
                         type: "email",
                         endAdornment: (
                           <InputAdornment position="end">
@@ -118,28 +279,82 @@ export default function SignupPage(props) {
                         ),
                       }}
                     />
-                    <CustomInput
-                      labelText="Password"
-                      id="pass"
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                      inputProps={{
-                        type: "password",
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <Icon className={classes.inputIconsColor}>
-                              lock_outline
-                            </Icon>
-                          </InputAdornment>
-                        ),
-                        autoComplete: "off",
-                      }}
-                    />
+                    <div className="fc">
+                      <CustomInput
+                        labelText="Password*"
+                        id="pass"
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                        inputProps={{
+                          name: "password",
+                          value: formState.password,
+                          onChange: handleChange,
+                          type: "password",
+                          autoComplete: "off",
+                        }}
+                      />
+                      <CustomInput
+                        labelText="Confirm Password*"
+                        id="cnfpass"
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                        inputProps={{
+                          name: "passwordConfirm",
+                          value: formState.passwordConfirm,
+                          onChange: handleChange,
+                          type: "password",
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <Icon className={classes.inputIconsColor}>
+                                lock_outline
+                              </Icon>
+                            </InputAdornment>
+                          ),
+                          autoComplete: "off",
+                        }}
+                      />
+                    </div>
                   </CardBody>
+                  <div className="w-100 fcc mar_b-32">
+                    <ReCAPTCHA
+                      sitekey="6LcK8jQaAAAAADOyreNBp9-8suxxvJvRco3m7X6r"
+                      onChange={captchaPassed}
+                      onExpired={captchaFailed}
+                      onErrored={captchaFailed}
+                    />
+                  </div>
+                  {signup.error && (
+                    <SnackbarContent
+                      className={classes.snackbar}
+                      message={
+                        <span>
+                          <b>FAILED:</b> {signup.error}...
+                        </span>
+                      }
+                      close
+                      color="danger"
+                      icon={Warning}
+                    />
+                  )}
                   <CardFooter className={classes.cardFooter}>
-                    <Button simple color="primary" size="lg">
-                      Get started
+                    <Button
+                      simple
+                      disabled={
+                        disableSignup ||
+                        signup.loading ||
+                        !formState.firstName ||
+                        !formState.lastName ||
+                        !formState.email ||
+                        !formState.password ||
+                        !formState.passwordConfirm
+                      }
+                      color="primary"
+                      size="lg"
+                      type="submit"
+                    >
+                      SIGNUP
                     </Button>
                   </CardFooter>
                 </form>

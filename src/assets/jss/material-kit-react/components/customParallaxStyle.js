@@ -1,3 +1,5 @@
+import { secondaryColor } from "assets/jss/material-kit-react";
+
 const parallaxStyle = {
   parallax: {
     height: "60vh",
@@ -24,6 +26,9 @@ const parallaxStyle = {
       top: "0",
       content: "''",
     },
+  },
+  dark: {
+    background: secondaryColor,
   },
   small: {
     height: "280px",

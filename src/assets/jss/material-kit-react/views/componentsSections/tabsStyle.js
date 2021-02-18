@@ -27,6 +27,9 @@ const tabsStyle = (theme) => ({
     display: "flex",
     flex: "1",
   },
+  marginTop: {
+    marginTop: "16px",
+  },
 });
 
 export default tabsStyle;

@@ -10,14 +10,18 @@ const useStyles = makeStyles(styles);
 
 export default function Danger(props) {
   const classes = useStyles();
-  const { children } = props;
+  const { children, className } = props;
   return (
-    <div className={classes.defaultFontStyle + " " + classes.dangerText}>
+    <div
+      className={
+        classes.defaultFontStyle + " " + classes.dangerText + " " + className
+      }
+    >
       {children}
     </div>
   );
 }
 
 Danger.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };

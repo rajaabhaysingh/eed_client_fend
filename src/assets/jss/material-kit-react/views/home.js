@@ -35,11 +35,9 @@ const landingPageStyle = (theme) => ({
     zIndex: "3",
   },
   mainRaised: {
+    margin: "-60px 30px 0px",
     [theme.breakpoints.down("sm")]: {
       margin: "-30px 10px 0px",
-    },
-    [theme.breakpoints.up("sm")]: {
-      margin: "-60px 30px 0px",
     },
     borderRadius: "6px",
     boxShadow:

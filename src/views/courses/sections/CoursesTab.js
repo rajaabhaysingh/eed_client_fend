@@ -25,11 +25,7 @@ export default function SectionTabs({ data }) {
     <div id="nav-tabs" className={classes.container}>
       <GridContainer spacing={3}>
         <GridItem xs={12} sm={12} md={12} lg={12} xl={12}>
-          <div className={classes.title}>
-            Courses
-            <i className="fas fa-chevron-right mar_l-8 mar_r-8"></i>
-            {data.name}
-          </div>
+          <div className={classes.title}>Available courses</div>
           <CustomTabs
             headerColor="info"
             tabs={[
@@ -37,7 +33,7 @@ export default function SectionTabs({ data }) {
                 tabName: "All courses",
                 tabIcon: Face,
                 tabContent: (
-                  <GridContainer className="w-100" spacing={3}>
+                  <GridContainer className={classes.marginTop} spacing={3}>
                     {data.allCourses?.length > 0 ? (
                       data.allCourses.map((course) => (
                         <GridItem
@@ -67,7 +63,7 @@ export default function SectionTabs({ data }) {
                 tabName: "Free Courses",
                 tabIcon: Chat,
                 tabContent: (
-                  <GridContainer className="w-100" spacing={3}>
+                  <GridContainer className={classes.marginTop} spacing={3}>
                     {data.freeCourses?.length > 0 ? (
                       data.freeCourses.map((course) => (
                         <GridItem

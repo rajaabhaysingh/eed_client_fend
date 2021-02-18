@@ -1,6 +1,10 @@
 // netRating
 // returns net rating
 const netRating = (ratings) => {
+  if (!ratings) {
+    return "N/A";
+  }
+
   const totalRatings =
     ratings.oneStar +
     ratings.twoStar +
@@ -17,7 +21,7 @@ const netRating = (ratings) => {
     totalRatings;
 
   if (totalRatings > 0) {
-    return finalRating;
+    return finalRating.toFixed(1);
   } else {
     return "N/A";
   }

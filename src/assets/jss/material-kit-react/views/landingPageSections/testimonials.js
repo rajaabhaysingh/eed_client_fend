@@ -8,7 +8,6 @@ const infographics = (theme) => ({
     [theme.breakpoints.up("sm")]: {
       padding: "70px 70px",
     },
-    backgroundColor: "#eee",
   },
   title: {
     ...title,
